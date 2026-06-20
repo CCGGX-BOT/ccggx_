@@ -5,103 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ccggx 2B2T - 无规则生存服务器</title>
     <style>
-        /* ===== 全局重置 ===== */
+        /* ===== 全局重置 & 全屏 ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            background-color: #ffffff;
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #f5f5f5;
             color: #111111;
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-family: 'Helvetica', 'Arial', 'PingFang SC', sans-serif;
             line-height: 1.7;
-            padding: 0;
             display: flex;
             justify-content: center;
         }
 
+        body {
+            padding: 0;
+        }
+
         .container {
-            max-width: 820px;
+            max-width: 900px;
             width: 100%;
-            padding: 1.5rem 1rem;
+            min-height: 100vh;
+            padding: 1.8rem 2rem 2rem 2rem;
+            background: #ffffff;
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
         }
 
         /* ===== 导航栏 ===== */
         .navbar {
-            border-bottom: 2px solid #111;
-            padding: 0.8rem 0 0.6rem 0;
-            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding: 0.6rem 0 0.8rem 0;
+            margin-bottom: 2.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 0.5rem 1.5rem;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            transition: all 0.3s ease;
         }
 
         .navbar .logo {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 700;
             letter-spacing: -0.5px;
             color: #111;
             text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .navbar .logo:hover {
+            opacity: 0.7;
         }
 
         .navbar .logo span {
-            color: #888;
+            color: #aaa;
             font-weight: 300;
         }
 
         .navbar .nav-links {
             display: flex;
-            gap: 1.8rem;
+            gap: 1.6rem;
             flex-wrap: wrap;
         }
 
         .navbar .nav-links a {
-            color: #111;
+            color: #555;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
             letter-spacing: 0.3px;
-            transition: color 0.2s;
+            transition: all 0.25s ease;
             cursor: pointer;
+            position: relative;
+            padding-bottom: 3px;
+        }
+
+        .navbar .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: #111;
+            transition: width 0.3s ease;
         }
 
         .navbar .nav-links a:hover {
-            color: #888;
+            color: #111;
+        }
+
+        .navbar .nav-links a:hover::after {
+            width: 100%;
         }
 
         .navbar .nav-links a.active {
-            color: #888;
-            text-decoration: underline;
-            text-underline-offset: 4px;
+            color: #111;
+            font-weight: 600;
+        }
+
+        .navbar .nav-links a.active::after {
+            width: 100%;
         }
 
         /* ===== 页面容器 ===== */
         .page {
             display: none;
+            animation: fadeUp 0.5s ease forwards;
+            flex: 1;
         }
 
         .page.active {
             display: block;
         }
 
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* ===== 通用 ===== */
         .section {
-            margin-bottom: 2.5rem;
+            margin-bottom: 2.8rem;
         }
 
         .section-title {
             font-size: 1.1rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             color: #222;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 0.4rem;
-            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -109,11 +163,14 @@
         }
 
         .section-title .badge {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 400;
-            color: #888;
+            color: #999;
             text-transform: none;
             letter-spacing: 0;
+            background: #f5f5f5;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
         }
 
         /* ===== 状态栏 ===== */
@@ -122,21 +179,27 @@
             align-items: center;
             gap: 0.8rem;
             font-size: 1.1rem;
-            background: #f5f5f5;
-            padding: 0.8rem 1.2rem;
-            border-left: 4px solid #ccc;
-            transition: border-color 0.3s;
+            background: #f8f8f8;
+            padding: 0.9rem 1.4rem;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+            transition: all 0.4s ease;
             flex-wrap: wrap;
         }
 
         .status-line.online {
             border-left-color: #2d8f2d;
+            background: #f0f8f0;
         }
+
         .status-line.offline {
             border-left-color: #cc0000;
+            background: #fdf0f0;
         }
+
         .status-line.checking {
             border-left-color: #f0a030;
+            background: #fefaf0;
         }
 
         .status-dot {
@@ -144,57 +207,81 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: #888;
-            transition: background-color 0.3s;
+            background-color: #ccc;
+            transition: all 0.4s ease;
             flex-shrink: 0;
         }
+
         .status-line.online .status-dot {
             background-color: #2d8f2d;
+            box-shadow: 0 0 12px rgba(45, 143, 45, 0.3);
         }
+
         .status-line.offline .status-dot {
             background-color: #cc0000;
+            box-shadow: 0 0 12px rgba(204, 0, 0, 0.25);
         }
+
         .status-line.checking .status-dot {
             background-color: #f0a030;
             animation: pulse 1s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.85);
+            }
         }
 
         .status-text .online {
             color: #2d8f2d;
             font-weight: 700;
         }
+
         .status-text .offline {
             color: #cc0000;
             font-weight: 700;
         }
+
         .status-text .checking {
             color: #f0a030;
             font-weight: 700;
         }
 
         .status-meta {
-            color: #888;
+            color: #999;
             font-size: 0.85rem;
             margin-left: auto;
         }
+
         .status-meta .player-count {
             color: #333;
             font-weight: 600;
         }
 
-        /* ===== 信息网格 ===== */
+        /* ===== 卡片 ===== */
+        .card {
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #ddd;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem 2rem;
-            background: #fafafa;
-            padding: 1.2rem 1.5rem;
-            border: 1px solid #eee;
         }
 
         .info-item {
@@ -203,10 +290,10 @@
         }
 
         .info-item .label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            color: #888;
+            color: #aaa;
             font-weight: 600;
         }
 
@@ -224,16 +311,17 @@
         /* ===== 描述 ===== */
         .description p {
             margin-bottom: 0.8rem;
-            color: #222;
+            color: #333;
         }
 
         .description .quote {
             background: #f5f5f5;
             padding: 0.8rem 1.2rem;
-            border-left: 3px solid #aaa;
-            color: #333;
+            border-left: 3px solid #ccc;
+            color: #444;
             font-style: italic;
             margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
         }
 
         /* ===== 特色列表 ===== */
@@ -241,19 +329,29 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 0.5rem 1.5rem;
-            background: #fafafa;
-            padding: 1.2rem 1.5rem;
-            border: 1px solid #eee;
             list-style: none;
+            padding: 0;
         }
 
         .feature-grid li {
             font-size: 0.95rem;
-            color: #222;
+            color: #333;
+            padding: 0.3rem 0;
+            transition: all 0.2s;
+            cursor: default;
         }
 
         .feature-grid li::before {
             content: "— ";
+            color: #bbb;
+            transition: color 0.2s;
+        }
+
+        .feature-grid li:hover {
+            color: #111;
+        }
+
+        .feature-grid li:hover::before {
             color: #888;
         }
 
@@ -261,20 +359,37 @@
         .announcement-container {
             background: #fafafa;
             border: 1px solid #eee;
+            border-radius: 10px;
             padding: 0 1.5rem 1.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .announcement-container:hover {
+            border-color: #ddd;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         }
 
         .announcement-list {
             padding-top: 0.5rem;
         }
 
+        /* ===== 公告条目（可点击展开） ===== */
         .announcement-item {
             padding: 1rem 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: 4px;
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
         }
 
         .announcement-item:last-child {
             border-bottom: none;
+        }
+
+        .announcement-item:hover {
+            background: #f8f8f8;
         }
 
         .announcement-item .announcement-header {
@@ -283,43 +398,90 @@
             align-items: baseline;
             flex-wrap: wrap;
             gap: 0.3rem 0.8rem;
+            pointer-events: none;
         }
 
         .announcement-item .announcement-title {
             font-weight: 700;
             color: #111;
             font-size: 1.05rem;
+            pointer-events: none;
         }
 
         .announcement-item .announcement-meta {
-            color: #888;
+            color: #999;
             font-size: 0.8rem;
+            pointer-events: none;
         }
 
         .announcement-item .announcement-meta .author {
-            color: #555;
+            color: #666;
             font-weight: 500;
         }
 
-        .announcement-item .announcement-body {
-            color: #333;
+        /* 公告正文：摘要 + 展开 */
+        .announcement-body {
+            color: #444;
             font-size: 0.95rem;
             margin-top: 0.4rem;
             word-break: break-word;
             white-space: pre-wrap;
+            pointer-events: none;
+            position: relative;
+            line-height: 1.8;
         }
 
+        .announcement-body .summary {
+            display: block;
+        }
+
+        .announcement-body .full-text {
+            display: none;
+        }
+
+        .announcement-body .full-text.show {
+            display: block;
+        }
+
+        .announcement-body .summary.hidden {
+            display: none;
+        }
+
+        .announcement-item .expand-hint {
+            display: inline-block;
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            color: #999;
+            pointer-events: none;
+            transition: color 0.2s;
+            user-select: none;
+        }
+
+        .announcement-item:hover .expand-hint {
+            color: #666;
+        }
+
+        .announcement-item .expand-hint .arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .announcement-item.expanded .expand-hint .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* 公告空状态 */
         .announcement-empty {
-            color: #888;
+            color: #aaa;
             text-align: center;
-            padding: 2rem 0;
+            padding: 2.5rem 0;
             font-size: 0.95rem;
         }
 
         .announcement-loading {
-            color: #888;
+            color: #aaa;
             text-align: center;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
             font-size: 0.9rem;
         }
 
@@ -330,40 +492,46 @@
         }
 
         .announcement-footer a {
-            color: #111;
-            text-decoration: underline;
-            text-underline-offset: 2px;
+            color: #555;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            transition: all 0.2s;
             cursor: pointer;
+            padding-bottom: 1px;
         }
 
         .announcement-footer a:hover {
-            color: #555;
+            color: #111;
+            border-bottom-color: #111;
         }
 
         .admin-hint {
             background: #f5f5f5;
             padding: 0.6rem 1rem;
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
             font-size: 0.85rem;
-            color: #888;
-            border: 1px dashed #ddd;
+            color: #999;
+            border-radius: 6px;
             text-align: center;
+            border: 1px dashed #e0e0e0;
         }
 
         .admin-hint a {
-            color: #111;
-            text-decoration: underline;
-            text-underline-offset: 2px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            transition: all 0.2s;
         }
 
         .admin-hint a:hover {
-            color: #555;
+            color: #111;
+            border-bottom-color: #111;
         }
 
         /* ===== About 页面 ===== */
         .about-text p {
             margin-bottom: 1rem;
-            color: #222;
+            color: #333;
         }
 
         .about-text .highlight-box {
@@ -371,6 +539,7 @@
             padding: 1.2rem 1.5rem;
             border-left: 3px solid #111;
             margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
         }
 
         /* ===== IP 复制 ===== */
@@ -380,9 +549,16 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 1rem;
-            background: #f5f5f5;
+            background: #f8f8f8;
             padding: 1rem 1.5rem;
-            border: 1px solid #ddd;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .copy-area:hover {
+            border-color: #ddd;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
         }
 
         .copy-area .ip {
@@ -394,58 +570,78 @@
 
         .copy-area .ip-alt {
             font-size: 0.9rem;
-            color: #555;
+            color: #888;
         }
 
         .btn {
             background: transparent;
-            border: 1px solid #111;
-            color: #111;
+            border: 1px solid #ddd;
+            color: #333;
             padding: 0.5rem 1.8rem;
             font-size: 0.85rem;
             font-family: inherit;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.25s ease;
             letter-spacing: 0.5px;
+            border-radius: 6px;
         }
 
         .btn:hover {
             background: #111;
+            border-color: #111;
             color: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
         }
 
         /* ===== 页脚 ===== */
         .footer {
-            margin-top: 2.5rem;
+            margin-top: auto;
             padding-top: 1.5rem;
             border-top: 1px solid #eee;
             font-size: 0.85rem;
-            color: #888;
+            color: #aaa;
             text-align: left;
         }
 
         .footer a {
-            color: #111;
-            text-decoration: underline;
-            text-underline-offset: 2px;
+            color: #555;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            transition: all 0.2s;
             cursor: pointer;
         }
 
         .footer a:hover {
-            color: #555;
+            color: #111;
+            border-bottom-color: #111;
         }
 
         /* ===== 响应式 ===== */
         @media (max-width: 700px) {
+            .container {
+                padding: 1rem;
+                min-height: 100vh;
+            }
+
             .navbar {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 0.8rem;
+                position: relative;
+                backdrop-filter: none;
+                background: #fff;
             }
 
             .navbar .nav-links {
-                gap: 1rem 1.5rem;
+                gap: 1rem 1.2rem;
                 justify-content: flex-start;
+                border-top: 1px solid #f0f0f0;
+                padding-top: 0.8rem;
             }
 
             .info-grid {
@@ -482,11 +678,35 @@
             .announcement-container {
                 padding: 0 1rem 1rem 1rem;
             }
+
+            .announcement-item {
+                padding: 0.8rem 0.2rem;
+            }
+
+            .section-title {
+                font-size: 0.95rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .announcement-item .announcement-title {
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 450px) {
             .feature-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .navbar .nav-links {
+                gap: 0.8rem;
+            }
+
+            .navbar .nav-links a {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -512,7 +732,6 @@
     <!-- ============================================================ -->
     <div class="page active" id="page-home">
 
-        <!-- 实时状态 -->
         <div class="section">
             <div class="status-line checking" id="statusLine">
                 <span class="status-dot"></span>
@@ -525,41 +744,40 @@
             </div>
         </div>
 
-        <!-- 连接信息 -->
         <div class="section">
             <div class="section-title">连接信息</div>
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="label">主地址</span>
-                    <span class="value highlight">ccggx.fucku.top</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">备用地址</span>
-                    <span class="value">vip.cq.frp.one:29581</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">游戏版本</span>
-                    <span class="value">Java 多版本</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">玩家交流群</span>
-                    <span class="value">1083385519</span>
+            <div class="card">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">主地址</span>
+                        <span class="value highlight">ccggx.fucku.top</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">备用地址</span>
+                        <span class="value">vip.cq.frp.one:29581</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">游戏版本</span>
+                        <span class="value">Java 多版本</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">玩家交流群</span>
+                        <span class="value">1083385519</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- IP 复制 -->
         <div class="section">
             <div class="copy-area">
                 <div>
                     <div class="ip" id="server-ip">ccggx.fucku.top</div>
                     <div class="ip-alt">备用：vip.cq.frp.one:29581</div>
                 </div>
-                <button class="btn" onclick="copyIP()">复制 IP</button>
+                <button class="btn" onclick="copyIP()">📋 复制 IP</button>
             </div>
         </div>
 
-        <!-- 快速简介 -->
         <div class="section">
             <div class="section-title">关于服务器</div>
             <div class="description">
@@ -579,7 +797,7 @@
     <div class="page" id="page-about">
         <div class="section">
             <div class="section-title">关于 ccggx 2B2T</div>
-            <div class="about-text">
+            <div class="about-text card" style="padding:1.5rem;">
 
                 <p><strong>ccggx 2B2T</strong> 是一个完全无规则、无政府状态的 Minecraft 生存服务器。它诞生于 2026 年，向著名的 2B2T.ORG 致敬。</p>
 
@@ -590,7 +808,7 @@
                 </div>
 
                 <p><strong>为什么选择这里？</strong></p>
-                <p>因为在这里，你不受任何限制。没有领地保护，没有禁用的物品，没有“违规”这个概念。你面对的只有其他玩家和 Minecraft 本身的世界规则。你的生存取决于你的智慧、你的实力，以及你的运气。</p>
+                <p>因为在这里，你不受任何限制。没有领地保护，没有禁用的物品，没有"违规"这个概念。你面对的只有其他玩家和 Minecraft 本身的世界规则。你的生存取决于你的智慧、你的实力，以及你的运气。</p>
 
                 <p><strong>存档永不重置</strong></p>
                 <p>这是我们的承诺。你在这个世界留下的每一个痕迹——无论是宏伟的建筑、还是巨大的弹坑——都将被永久保存，直到被其他玩家改变。历史由你书写。</p>
@@ -608,12 +826,12 @@
     <div class="page" id="page-rules">
         <div class="section">
             <div class="section-title">规则</div>
-            <div class="description">
-                <p style="font-size:1.2rem;font-weight:700;text-align:center;padding:1rem 0;">没有规则。</p>
-                <p style="text-align:center;color:#888;">这就是全部规则。</p>
-                <div style="height:1px;background:#ddd;margin:1.5rem 0;"></div>
-                <p><strong>但如果你一定要找一些指引的话：</strong></p>
-                <ul class="feature-grid" style="margin-top:0.5rem;">
+            <div class="card" style="padding:2rem;">
+                <p style="font-size:1.5rem;font-weight:700;text-align:center;padding:0.5rem 0;letter-spacing:-0.5px;">没有规则。</p>
+                <p style="text-align:center;color:#aaa;font-size:0.95rem;">这就是全部规则。</p>
+                <div style="height:1px;background:#eee;margin:1.8rem 0;"></div>
+                <p style="color:#666;font-size:0.9rem;text-align:center;margin-bottom:1rem;">如果你一定要找一些指引：</p>
+                <ul class="feature-grid" style="max-width:500px;margin:0 auto;">
                     <li>没有禁制</li>
                     <li>没有领地保护</li>
                     <li>死亡不掉落</li>
@@ -624,9 +842,9 @@
                     <li>无管理干预</li>
                     <li>出生点混沌</li>
                 </ul>
-                <p style="margin-top:1.5rem;color:#888;font-size:0.9rem;text-align:center;">
+                <p style="margin-top:2rem;color:#aaa;font-size:0.9rem;text-align:center;">
                     这些不是规则，只是事实描述。<br>
-                    真正唯一的规则是：<strong>没有规则。</strong>
+                    真正唯一的规则是：<strong style="color:#111;">没有规则。</strong>
                 </p>
             </div>
         </div>
@@ -639,7 +857,7 @@
         <div class="section">
             <div class="section-title">
                 📢 公告栏
-                <span class="badge">管理员发布 · 玩家可看</span>
+                <span class="badge">点击展开全文</span>
             </div>
             <div class="announcement-container">
 
@@ -650,7 +868,7 @@
                 <div class="announcement-footer">
                     <a onclick="loadAnnouncements()">🔄 刷新公告</a>
                     &nbsp;·&nbsp;
-                    <span style="color:#888;font-size:0.85rem;" id="announcementCount"></span>
+                    <span style="color:#aaa;font-size:0.85rem;" id="announcementCount"></span>
                 </div>
 
                 <div class="admin-hint">
@@ -696,11 +914,9 @@
     // ================================================================
 
     function switchPage(pageId) {
-        // 隐藏所有页面
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        // 显示目标页面
         document.getElementById('page-' + pageId).classList.add('active');
-        // 更新导航高亮
+
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
         const navMap = {
             'home': 'nav-home',
@@ -711,12 +927,10 @@
         const targetNav = document.getElementById(navMap[pageId]);
         if (targetNav) targetNav.classList.add('active');
 
-        // 如果切换到公告页，刷新公告
         if (pageId === 'announcements') {
             loadAnnouncements();
         }
 
-        // 滚动到顶部
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -800,9 +1014,14 @@
         const btn = event.target;
         navigator.clipboard.writeText(ip).then(() => {
             const original = btn.innerText;
-            btn.innerText = '已复制 ✓';
+            btn.innerText = '✅ 已复制';
             btn.style.borderColor = '#2d8f2d';
-            setTimeout(() => { btn.innerText = original; btn.style.borderColor = '#111'; }, 2000);
+            btn.style.background = '#f0f8f0';
+            setTimeout(() => {
+                btn.innerText = original;
+                btn.style.borderColor = '#ddd';
+                btn.style.background = 'transparent';
+            }, 2000);
         }).catch(() => {
             const ta = document.createElement('textarea');
             ta.value = ip;
@@ -814,12 +1033,14 @@
     };
 
     // ================================================================
-    // 公告栏
+    // 公告栏（摘要 + 展开）
     // ================================================================
 
     const ANNOUNCEMENT = {
         items: [],
         loading: false,
+        // 摘要长度（字符数）
+        SUMMARY_LENGTH: 100,
 
         async fetchAnnouncements() {
             const repo = CONFIG.GITHUB_REPO;
@@ -860,16 +1081,33 @@
         },
 
         getMockData() {
+            const longContent = `服务器已正式开服！\n\n主地址：ccggx.fucku.top\n备用地址：vip.cq.frp.one:29581\n\n无规则，无秩序，存档永不重置！\n\n欢迎各位玩家加入这片废土。在这里，没有管理员，没有禁制，没有领地保护。你唯一需要做的就是——活下去。\n\n—— 管理员`;
+
             return [
                 {
                     id: 1,
                     title: '📢 欢迎来到 ccggx 2B2T',
                     author: '管理员',
                     time: new Date().toISOString(),
-                    content: '服务器已开服！\n主地址：ccggx.fucku.top\n备用地址：vip.cq.frp.one:29581\n\n无规则，无秩序，存档永不重置！',
+                    content: longContent,
                     url: '#'
                 }
             ];
+        },
+
+        // 截取摘要
+        truncate(text, length) {
+            if (!text) return '';
+            // 移除多余空行
+            const cleaned = text.replace(/\n{3,}/g, '\n\n');
+            if (cleaned.length <= length) return cleaned;
+            return cleaned.slice(0, length) + '...';
+        },
+
+        // 判断内容是否被截断
+        isTruncated(text) {
+            if (!text) return false;
+            return text.length > this.SUMMARY_LENGTH;
         },
 
         render(items) {
@@ -883,19 +1121,32 @@
             }
 
             let html = '';
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 const timeStr = new Date(item.time).toLocaleString('zh-CN');
+                const isLong = this.isTruncated(item.content);
+                const summary = isLong ? this.truncate(item.content, this.SUMMARY_LENGTH) : item.content;
+                // 添加唯一ID用于展开控制
+                const itemId = `ann-${item.id || index}`;
+
                 html += `
-                    <div class="announcement-item">
+                    <div class="announcement-item" id="${itemId}" onclick="toggleAnnouncement('${itemId}')">
                         <div class="announcement-header">
                             <span class="announcement-title">${this.escapeHtml(item.title)}</span>
                             <span class="announcement-meta">
                                 <span class="author">${this.escapeHtml(item.author)}</span>
                                 · ${timeStr}
-                                ${item.url && item.url !== '#' ? `· <a href="${item.url}" target="_blank" style="color:#888;">查看原文</a>` : ''}
+                                ${item.url && item.url !== '#' ? `· <a href="${item.url}" target="_blank" style="color:#888;text-decoration:none;border-bottom:1px solid #ddd;pointer-events:auto;" onclick="event.stopPropagation();">查看原文</a>` : ''}
                             </span>
                         </div>
-                        <div class="announcement-body">${this.escapeHtml(item.content).replace(/\n/g, '<br>')}</div>
+                        <div class="announcement-body">
+                            <span class="summary" id="${itemId}-summary">${this.escapeHtml(summary).replace(/\n/g, '<br>')}</span>
+                            ${isLong ? `
+                                <span class="full-text" id="${itemId}-full">${this.escapeHtml(item.content).replace(/\n/g, '<br>')}</span>
+                                <span class="expand-hint">
+                                    <span id="${itemId}-hint">展开全文 ▼</span>
+                                </span>
+                            ` : ''}
+                        </div>
                     </div>
                 `;
             });
@@ -928,6 +1179,37 @@
         }
     };
 
+    // ================================================================
+    // 展开/收起公告
+    // ================================================================
+
+    window.toggleAnnouncement = function(itemId) {
+        const item = document.getElementById(itemId);
+        if (!item) return;
+
+        const summary = document.getElementById(`${itemId}-summary`);
+        const full = document.getElementById(`${itemId}-full`);
+        const hint = document.getElementById(`${itemId}-hint`);
+
+        if (!summary || !full || !hint) return;
+
+        const isExpanded = item.classList.contains('expanded');
+
+        if (isExpanded) {
+            // 收起
+            summary.classList.remove('hidden');
+            full.classList.remove('show');
+            hint.textContent = '展开全文 ▼';
+            item.classList.remove('expanded');
+        } else {
+            // 展开
+            summary.classList.add('hidden');
+            full.classList.add('show');
+            hint.textContent = '收起 ▲';
+            item.classList.add('expanded');
+        }
+    };
+
     window.loadAnnouncements = function() {
         ANNOUNCEMENT.load();
     };
@@ -937,11 +1219,11 @@
     // ================================================================
 
     document.addEventListener('DOMContentLoaded', function() {
-        // 默认加载公告（首页也会显示，但公告页默认加载）
         ANNOUNCEMENT.load();
         console.log('=== ccggx 2B2T 官网 ===');
         console.log('📦 仓库:', CONFIG.GITHUB_REPO);
-        console.log('📢 公告数据来自 GitHub Issues');
+        console.log('📢 公告摘要长度:', ANNOUNCEMENT.SUMMARY_LENGTH, '字符');
+        console.log('💡 点击公告可展开/收起全文');
     });
 </script>
 

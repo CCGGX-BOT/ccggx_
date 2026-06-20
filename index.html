@@ -221,123 +221,27 @@
             color: #888;
         }
 
-        /* ===== 论坛 ===== */
-        .forum-container {
+        /* ===== 公告栏 ===== */
+        .announcement-container {
             background: #fafafa;
             border: 1px solid #eee;
             padding: 0 1.5rem 1.5rem 1.5rem;
         }
 
-        .forum-form {
-            padding: 1.2rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .forum-form .form-row {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .forum-form input[type="text"],
-        .forum-form textarea {
-            font-family: inherit;
-            font-size: 0.95rem;
-            padding: 0.6rem 0.8rem;
-            border: 1px solid #ddd;
-            background: #fff;
-            color: #111;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .forum-form input[type="text"]:focus,
-        .forum-form textarea:focus {
-            border-color: #888;
-        }
-
-        .forum-form input[type="text"] {
-            flex: 2;
-            min-width: 160px;
-        }
-
-        .forum-form textarea {
-            width: 100%;
-            min-height: 60px;
-            resize: vertical;
-        }
-
-        .forum-form .form-actions {
-            display: flex;
-            gap: 0.8rem;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 0.6rem;
-        }
-
-        .forum-form .form-actions .hint {
-            font-size: 0.8rem;
-            color: #888;
-        }
-
-        .forum-form .form-actions .hint.error {
-            color: #cc0000;
-        }
-        .forum-form .form-actions .hint.success {
-            color: #2d8f2d;
-        }
-
-        .btn {
-            background: transparent;
-            border: 1px solid #111;
-            color: #111;
-            padding: 0.5rem 1.8rem;
-            font-size: 0.85rem;
-            font-family: inherit;
-            cursor: pointer;
-            transition: 0.2s;
-            letter-spacing: 0.5px;
-        }
-
-        .btn:hover {
-            background: #111;
-            color: #fff;
-        }
-
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .btn:disabled:hover {
-            background: transparent;
-            color: #111;
-        }
-
-        .btn-primary {
-            background: #111;
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: #333;
-            border-color: #333;
-        }
-
-        .forum-posts {
+        .announcement-list {
             padding-top: 0.5rem;
         }
 
-        .forum-post {
-            padding: 0.9rem 0;
+        .announcement-item {
+            padding: 1rem 0;
             border-bottom: 1px solid #eee;
         }
 
-        .forum-post:last-child {
+        .announcement-item:last-child {
             border-bottom: none;
         }
 
-        .forum-post .post-header {
+        .announcement-item .announcement-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
@@ -345,30 +249,31 @@
             gap: 0.3rem 0.8rem;
         }
 
-        .forum-post .post-title {
-            font-weight: 600;
+        .announcement-item .announcement-title {
+            font-weight: 700;
             color: #111;
-            font-size: 1rem;
+            font-size: 1.05rem;
         }
 
-        .forum-post .post-meta {
+        .announcement-item .announcement-meta {
             color: #888;
             font-size: 0.8rem;
         }
 
-        .forum-post .post-meta .author {
+        .announcement-item .announcement-meta .author {
             color: #555;
             font-weight: 500;
         }
 
-        .forum-post .post-body {
+        .announcement-item .announcement-body {
             color: #333;
             font-size: 0.95rem;
-            margin-top: 0.3rem;
+            margin-top: 0.4rem;
             word-break: break-word;
+            white-space: pre-wrap;
         }
 
-        .forum-post .post-body .reply {
+        .announcement-item .announcement-body .reply {
             background: #f0f0f0;
             padding: 0.5rem 0.8rem;
             margin-top: 0.5rem;
@@ -376,39 +281,54 @@
             border-left: 2px solid #ccc;
         }
 
-        .forum-post .post-body .reply .reply-meta {
-            color: #888;
-            font-size: 0.8rem;
-        }
-
-        .forum-empty {
+        .announcement-empty {
             color: #888;
             text-align: center;
             padding: 2rem 0;
             font-size: 0.95rem;
         }
 
-        .forum-loading {
+        .announcement-loading {
             color: #888;
             text-align: center;
             padding: 1rem 0;
             font-size: 0.9rem;
         }
 
-        .forum-more {
+        .announcement-footer {
             text-align: right;
             padding-top: 0.8rem;
             font-size: 0.9rem;
         }
 
-        .forum-more a {
+        .announcement-footer a {
             color: #111;
             text-decoration: underline;
             text-underline-offset: 2px;
             cursor: pointer;
         }
 
-        .forum-more a:hover {
+        .announcement-footer a:hover {
+            color: #555;
+        }
+
+        .admin-hint {
+            background: #f5f5f5;
+            padding: 0.6rem 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #888;
+            border: 1px dashed #ddd;
+            text-align: center;
+        }
+
+        .admin-hint a {
+            color: #111;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .admin-hint a:hover {
             color: #555;
         }
 
@@ -494,12 +414,8 @@
                 font-size: 0.8rem;
             }
 
-            .forum-container {
+            .announcement-container {
                 padding: 0 1rem 1rem 1rem;
-            }
-
-            .forum-form input[type="text"] {
-                flex: 1 1 100%;
             }
         }
 
@@ -520,7 +436,7 @@
             <h1>ccggx 2B2T</h1>
             <div class="tagline">无规则 · 无政府 · 存档永不重置</div>
         </div>
-        <div style="font-size:0.8rem;color:#888;">论坛已开启 · 数据永久保存</div>
+        <div style="font-size:0.8rem;color:#888;">公告栏 · 数据永久保存</div>
     </header>
 
     <!-- ========== 模块 2：实时状态 ========== -->
@@ -585,36 +501,30 @@
         </ul>
     </div>
 
-    <!-- ========== 模块 6：论坛 ========== -->
+    <!-- ========== 模块 6：公告栏 ========== -->
     <div class="section">
         <div class="section-title">
-            论坛 · 玩家交流
-            <span class="badge">同一 IP 每 10 分钟可发 1 帖</span>
+            📢 服务器公告
+            <span class="badge">管理员发布 · 玩家可看</span>
         </div>
-        <div class="forum-container">
+        <div class="announcement-container">
 
-            <!-- 发帖表单 -->
-            <div class="forum-form">
-                <div class="form-row">
-                    <input type="text" id="forumAuthor" placeholder="你的名字（必填）" maxlength="20">
-                    <input type="text" id="forumTitle" placeholder="帖子标题（必填）" maxlength="60">
-                </div>
-                <textarea id="forumContent" placeholder="帖子内容（必填，最多 1000 字）" maxlength="1000"></textarea>
-                <div class="form-actions">
-                    <button class="btn btn-primary" id="submitPostBtn" onclick="submitPost()">📝 发布帖子</button>
-                    <span class="hint" id="formHint">内容将永久保存在 GitHub Issues 中</span>
-                </div>
+            <!-- 公告列表 -->
+            <div class="announcement-list" id="announcementList">
+                <div class="announcement-loading">⏳ 加载公告中...</div>
             </div>
 
-            <!-- 帖子列表 -->
-            <div class="forum-posts" id="forumPosts">
-                <div class="forum-loading">⏳ 加载帖子中...</div>
-            </div>
-
-            <div class="forum-more">
-                <a onclick="loadPosts()">🔄 刷新帖子</a>
+            <div class="announcement-footer">
+                <a onclick="loadAnnouncements()">🔄 刷新公告</a>
                 &nbsp;·&nbsp;
-                <span style="color:#888;font-size:0.85rem;" id="postCount"></span>
+                <span style="color:#888;font-size:0.85rem;" id="announcementCount"></span>
+            </div>
+
+            <!-- 管理员提示 -->
+            <div class="admin-hint">
+                🔒 只有管理员可以发布公告。
+                <a href="https://github.com/CCGGX-BOT/ccggx_/issues" target="_blank">在 GitHub Issues 中发布</a>
+                （新建 Issue 即可，内容自动同步到公告栏）
             </div>
         </div>
     </div>
@@ -633,39 +543,34 @@
 
     <!-- ========== 模块 8：页脚 ========== -->
     <footer class="footer">
-        <p>© ccggx 2B2T · 无政府生存服务器 · 数据存储在 GitHub Issues</p>
+        <p>© ccggx 2B2T · 无政府生存服务器 · 公告存储在 GitHub Issues</p>
         <p style="margin-top:0.3rem;">
             <a onclick="alert('企鹅交流群：1083385519')">加入玩家群</a>
             &nbsp;·&nbsp;
             <a href="mailto:contact@ccggx.fucku.top">联系管理员</a>
             &nbsp;·&nbsp;
-            <a onclick="loadPosts()">刷新论坛</a>
+            <a onclick="loadAnnouncements()">刷新公告</a>
         </p>
     </footer>
 
 </div>
 
 <!-- ================================================================ -->
-<!-- JavaScript - 所有功能模块 -->
+<!-- JavaScript -->
 <!-- ================================================================ -->
 <script>
     // ================================================================
-    // 模块 1：配置
+    // 配置
     // ================================================================
 
     const CONFIG = {
-        // GitHub 仓库信息
-        GITHUB_REPO: 'CCGGX-BOT/ccggx',
-        // 发帖需要 Token，读取帖子不需要（公开仓库）
-        // 注意：如果 Token 不正确，帖子会保存到本地浏览器
-        GITHUB_TOKEN: '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', // 留空则发帖保存到本地，填 Token 则保存到 GitHub
-
+        GITHUB_REPO: 'CCGGX-BOT/ccggx_',
         SERVER_ADDRESS: 'ccggx.fucku.top',
-        POST_INTERVAL_MS: 10 * 60 * 1000, // 10 分钟
+        // 公告栏只需要读取权限，公开仓库不需要 Token
     };
 
     // ================================================================
-    // 模块 2：服务器状态检测
+    // 服务器状态检测
     // ================================================================
 
     (function initStatusCheck() {
@@ -736,7 +641,7 @@
     })();
 
     // ================================================================
-    // 模块 3：复制 IP
+    // 复制 IP
     // ================================================================
 
     window.copyIP = function() {
@@ -758,23 +663,22 @@
     };
 
     // ================================================================
-    // 模块 4：论坛 - GitHub Issues 驱动
+    // 公告栏 - 从 GitHub Issues 读取
     // ================================================================
 
-    const FORUM = {
-        posts: [],
+    const ANNOUNCEMENT = {
+        items: [],
         loading: false,
 
-        // 获取帖子列表
-        async fetchPosts() {
+        async fetchAnnouncements() {
             const repo = CONFIG.GITHUB_REPO;
             if (!repo || repo === 'YOUR_USERNAME/YOUR_REPO') {
-                return this.getMockPosts();
+                return this.getMockData();
             }
 
             try {
                 const url = `https://api.github.com/repos/${repo}/issues?state=all&per_page=50&sort=created&direction=desc`;
-                console.log('📡 正在请求:', url);
+                console.log('📡 正在请求公告:', url);
 
                 const response = await fetch(url, {
                     headers: { 'Accept': 'application/vnd.github.v3+json' }
@@ -783,8 +687,8 @@
                 console.log('📡 HTTP 状态:', response.status);
 
                 if (response.status === 404) {
-                    console.warn('⚠️ 仓库或 Issues 不可用，使用本地数据');
-                    return this.getMockPosts();
+                    console.warn('⚠️ 仓库或 Issues 不可用');
+                    return this.getMockData();
                 }
 
                 if (!response.ok) {
@@ -792,20 +696,21 @@
                 }
 
                 const issues = await response.json();
-                console.log('📡 获取到 Issues 数量:', issues.length);
+                console.log('📡 获取到公告数量:', issues.length);
 
                 if (!Array.isArray(issues) || issues.length === 0) {
-                    console.log('📭 暂无帖子');
                     return [];
                 }
 
                 return issues.map(issue => {
-                    let author = '匿名';
+                    // 从 label 中提取作者
+                    let author = '管理员';
                     const authorLabel = issue.labels?.find(l => l.name && l.name.startsWith('author:'));
                     if (authorLabel) {
                         author = authorLabel.name.replace('author:', '');
                     }
 
+                    // 提取内容
                     let content = issue.body || '';
                     const contentMatch = content.match(/<!-- content -->\s*([\s\S]*?)\s*<!-- \/content -->/);
                     if (contentMatch) {
@@ -814,170 +719,72 @@
                         content = content.trim();
                     }
 
-                    const replies = [];
-                    const replyRegex = /<!-- reply -->\s*<strong>(.*?)<\/strong>\s*<em>(.*?)<\/em>\s*<blockquote>\s*([\s\S]*?)\s*<\/blockquote>\s*<!-- \/reply -->/g;
-                    let match;
-                    while ((match = replyRegex.exec(issue.body || '')) !== null) {
-                        replies.push({
-                            author: match[1].trim(),
-                            time: match[2].trim(),
-                            content: match[3].trim()
-                        });
-                    }
-
                     return {
                         id: issue.number,
                         title: issue.title,
                         author: author,
                         time: issue.created_at,
                         content: content,
-                        replies: replies,
-                        replyCount: issue.comments || 0
+                        url: issue.html_url
                     };
                 });
             } catch (error) {
-                console.error('❌ 获取帖子失败:', error);
-                const local = this.getLocalPosts();
-                if (local && local.length > 0) {
-                    return local;
-                }
-                return this.getMockPosts();
+                console.error('❌ 获取公告失败:', error);
+                return this.getMockData();
             }
         },
 
-        // 模拟数据
-        getMockPosts() {
+        getMockData() {
             return [
                 {
                     id: 1,
-                    title: '💬 欢迎来到 ccggx 2B2T 论坛',
-                    author: 'admin',
+                    title: '📢 欢迎来到 ccggx 2B2T',
+                    author: '管理员',
                     time: new Date().toISOString(),
-                    content: '这是论坛的示例帖子。配置好 GitHub Issues 后，所有帖子将永久保存。',
-                    replies: [],
-                    replyCount: 0
+                    content: '服务器已开服！\n主地址：ccggx.fucku.top\n备用地址：vip.cq.frp.one:29581\n\n无规则，无秩序，存档永不重置！',
+                    url: '#'
                 },
                 {
                     id: 2,
-                    title: '🎮 服务器地址：ccggx.fucku.top',
-                    author: 'admin',
+                    title: '💡 公告栏使用说明',
+                    author: '管理员',
                     time: new Date(Date.now() - 3600000).toISOString(),
-                    content: '主地址：ccggx.fucku.top\n备用地址：vip.cq.frp.one:29581',
-                    replies: [],
-                    replyCount: 0
+                    content: '管理员在 GitHub Issues 中发布公告后，会自动同步到这里。\n玩家可以随时查看最新公告。',
+                    url: '#'
                 }
             ];
         },
 
-        // 本地存储
-        saveToLocal(title, author, content) {
-            const key = 'forum_posts_local';
-            let posts = JSON.parse(localStorage.getItem(key) || '[]');
-            const newPost = {
-                id: Date.now(),
-                title: title,
-                author: author,
-                time: new Date().toISOString(),
-                content: content,
-                replies: [],
-                replyCount: 0,
-                _local: true
-            };
-            posts.unshift(newPost);
-            localStorage.setItem(key, JSON.stringify(posts));
-            return { success: true, id: newPost.id, local: true };
-        },
+        render(items) {
+            const container = document.getElementById('announcementList');
+            const countEl = document.getElementById('announcementCount');
 
-        getLocalPosts() {
-            const key = 'forum_posts_local';
-            const data = localStorage.getItem(key);
-            if (data) {
-                try { return JSON.parse(data); } catch (e) { return []; }
-            }
-            return [];
-        },
-
-        // 创建帖子
-        async createPost(title, author, content) {
-            const repo = CONFIG.GITHUB_REPO;
-            const token = CONFIG.GITHUB_TOKEN;
-
-            // 如果没有 Token，保存到本地
-            if (!token || token === '') {
-                console.warn('⚠️ 未配置 GitHub Token，帖子将保存到本地浏览器');
-                return this.saveToLocal(title, author, content);
-            }
-
-            try {
-                const body = `**作者：** ${author}\n\n<!-- content -->\n${content}\n<!-- /content -->`;
-
-                const response = await fetch(`https://api.github.com/repos/${repo}/issues`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        title: title,
-                        body: body,
-                        labels: [`author:${author}`]
-                    })
-                });
-
-                if (!response.ok) {
-                    const err = await response.json();
-                    throw new Error(err.message || `HTTP ${response.status}`);
-                }
-
-                const issue = await response.json();
-                return { success: true, id: issue.number };
-            } catch (error) {
-                console.error('❌ 发布到 GitHub 失败:', error);
-                return this.saveToLocal(title, author, content);
-            }
-        },
-
-        // 渲染帖子
-        renderPosts(posts) {
-            const container = document.getElementById('forumPosts');
-            const countEl = document.getElementById('postCount');
-
-            if (!posts || posts.length === 0) {
-                container.innerHTML = '<div class="forum-empty">📭 还没有帖子，快来发布第一条吧！</div>';
-                countEl.textContent = '共 0 条帖子';
+            if (!items || items.length === 0) {
+                container.innerHTML = '<div class="announcement-empty">📭 暂无公告</div>';
+                countEl.textContent = '共 0 条公告';
                 return;
             }
 
             let html = '';
-            posts.forEach(post => {
-                const timeStr = new Date(post.time).toLocaleString('zh-CN');
-                const isLocal = post._local ? ' <span style="color:#f0a030;font-size:0.7rem;">[本地]</span>' : '';
+            items.forEach(item => {
+                const timeStr = new Date(item.time).toLocaleString('zh-CN');
                 html += `
-                    <div class="forum-post">
-                        <div class="post-header">
-                            <span class="post-title">${this.escapeHtml(post.title)}</span>
-                            <span class="post-meta">
-                                <span class="author">${this.escapeHtml(post.author)}</span>
+                    <div class="announcement-item">
+                        <div class="announcement-header">
+                            <span class="announcement-title">${this.escapeHtml(item.title)}</span>
+                            <span class="announcement-meta">
+                                <span class="author">${this.escapeHtml(item.author)}</span>
                                 · ${timeStr}
-                                ${isLocal}
+                                ${item.url && item.url !== '#' ? `· <a href="${item.url}" target="_blank" style="color:#888;">查看原文</a>` : ''}
                             </span>
                         </div>
-                        <div class="post-body">
-                            ${this.escapeHtml(post.content).replace(/\n/g, '<br>')}
-                            ${post.replies && post.replies.length > 0 ? post.replies.map(r => `
-                                <div class="reply">
-                                    <div class="reply-meta">${this.escapeHtml(r.author)} · ${new Date(r.time).toLocaleString('zh-CN')}</div>
-                                    ${this.escapeHtml(r.content)}
-                                </div>
-                            `).join('') : ''}
-                        </div>
+                        <div class="announcement-body">${this.escapeHtml(item.content).replace(/\n/g, '<br>')}</div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
-            countEl.textContent = `共 ${posts.length} 条帖子`;
+            countEl.textContent = `共 ${items.length} 条公告`;
         },
 
         escapeHtml(text) {
@@ -987,35 +794,20 @@
             return div.innerHTML;
         },
 
-        // 加载帖子
         async load() {
             if (this.loading) return;
             this.loading = true;
 
-            const container = document.getElementById('forumPosts');
-            container.innerHTML = '<div class="forum-loading">⏳ 加载帖子中...</div>';
+            const container = document.getElementById('announcementList');
+            container.innerHTML = '<div class="announcement-loading">⏳ 加载公告中...</div>';
 
             try {
-                let posts = await this.fetchPosts();
-
-                if (!posts || posts.length === 0) {
-                    const local = this.getLocalPosts();
-                    if (local && local.length > 0) {
-                        posts = local;
-                    }
-                }
-
-                this.posts = posts || [];
-                this.renderPosts(this.posts);
+                let items = await this.fetchAnnouncements();
+                this.items = items || [];
+                this.render(this.items);
             } catch (error) {
-                console.error('❌ 加载失败:', error);
-                const local = this.getLocalPosts();
-                if (local && local.length > 0) {
-                    this.posts = local;
-                    this.renderPosts(this.posts);
-                } else {
-                    container.innerHTML = '<div class="forum-empty">⚠️ 加载失败，请刷新重试</div>';
-                }
+                console.error('❌ 加载公告失败:', error);
+                container.innerHTML = '<div class="announcement-empty">⚠️ 加载失败，请刷新重试</div>';
             }
 
             this.loading = false;
@@ -1023,127 +815,20 @@
     };
 
     // ================================================================
-    // 模块 5：发帖逻辑
+    // 初始化
     // ================================================================
 
-    async function getClientIP() {
-        try {
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            return data.ip;
-        } catch (error) {
-            return 'local_' + (localStorage.getItem('local_id') || Math.random().toString(36).substr(2, 6));
-        }
-    }
-
-    function canPost(ip) {
-        const key = `forum_last_post_${ip}`;
-        const lastPostTime = localStorage.getItem(key);
-        if (lastPostTime) {
-            const elapsed = Date.now() - parseInt(lastPostTime);
-            if (elapsed < CONFIG.POST_INTERVAL_MS) {
-                const remaining = Math.ceil((CONFIG.POST_INTERVAL_MS - elapsed) / 60000);
-                return { can: false, remaining: remaining };
-            }
-        }
-        return { can: true };
-    }
-
-    function recordPost(ip) {
-        const key = `forum_last_post_${ip}`;
-        localStorage.setItem(key, Date.now().toString());
-    }
-
-    window.submitPost = async function() {
-        const titleEl = document.getElementById('forumTitle');
-        const authorEl = document.getElementById('forumAuthor');
-        const contentEl = document.getElementById('forumContent');
-        const hintEl = document.getElementById('formHint');
-        const btn = document.getElementById('submitPostBtn');
-
-        const title = titleEl.value.trim();
-        const author = authorEl.value.trim() || '匿名';
-        const content = contentEl.value.trim();
-
-        if (!title) { hintEl.textContent = '⚠️ 请填写帖子标题'; hintEl.className = 'hint error'; return; }
-        if (!content) { hintEl.textContent = '⚠️ 请填写帖子内容'; hintEl.className = 'hint error'; return; }
-        if (content.length > 1000) { hintEl.textContent = '⚠️ 内容不能超过 1000 字'; hintEl.className = 'hint error'; return; }
-        if (author.length > 20) { hintEl.textContent = '⚠️ 名字不能超过 20 个字符'; hintEl.className = 'hint error'; return; }
-
-        let ip = localStorage.getItem('cached_ip');
-        if (!ip) {
-            ip = await getClientIP();
-            localStorage.setItem('cached_ip', ip);
-        }
-
-        const check = canPost(ip);
-        if (!check.can) {
-            hintEl.textContent = `⏳ 每 10 分钟只能发 1 帖，请等待 ${check.remaining} 分钟后再试`;
-            hintEl.className = 'hint error';
-            return;
-        }
-
-        btn.disabled = true;
-        hintEl.textContent = '⏳ 发布中...';
-        hintEl.className = 'hint';
-
-        try {
-            const result = await FORUM.createPost(title, author, content);
-            if (result.success) {
-                hintEl.textContent = '✅ 帖子发布成功！';
-                hintEl.className = 'hint success';
-                titleEl.value = '';
-                contentEl.value = '';
-                recordPost(ip);
-                await FORUM.load();
-            } else {
-                hintEl.textContent = '❌ 发布失败：' + (result.error || '未知错误');
-                hintEl.className = 'hint error';
-            }
-        } catch (error) {
-            hintEl.textContent = '❌ 发布失败：' + error.message;
-            hintEl.className = 'hint error';
-        }
-
-        btn.disabled = false;
-        setTimeout(() => {
-            hintEl.textContent = '内容将永久保存在 GitHub Issues 中';
-            hintEl.className = 'hint';
-        }, 5000);
-    };
-
-    // ================================================================
-    // 模块 6：初始化
-    // ================================================================
-
-    window.loadPosts = function() {
-        FORUM.load();
+    window.loadAnnouncements = function() {
+        ANNOUNCEMENT.load();
     };
 
     document.addEventListener('DOMContentLoaded', function() {
-        FORUM.load();
+        ANNOUNCEMENT.load();
 
-        const cachedIP = localStorage.getItem('cached_ip');
-        if (!cachedIP) {
-            getClientIP().then(ip => {
-                localStorage.setItem('cached_ip', ip);
-            });
-        }
-
-        console.log('=== ccggx 2B2T 论坛 ===');
+        console.log('=== ccggx 2B2T 公告栏 ===');
         console.log('📦 仓库:', CONFIG.GITHUB_REPO);
-        console.log('🔑 Token:', CONFIG.GITHUB_TOKEN ? '已配置' : '未配置（发帖将保存到本地）');
-        console.log('⏱️ 发帖限制: 每 10 分钟 1 帖');
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-            const active = document.activeElement;
-            if (active && (active.id === 'forumTitle' || active.id === 'forumContent' || active.id === 'forumAuthor')) {
-                e.preventDefault();
-                submitPost();
-            }
-        }
+        console.log('📢 公告数据来自 GitHub Issues');
+        console.log('🔑 公开仓库，无需 Token');
     });
 </script>
 

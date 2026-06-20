@@ -228,7 +228,6 @@
             padding: 0 1.5rem 1.5rem 1.5rem;
         }
 
-        /* 发帖表单 */
         .forum-form {
             padding: 1.2rem 0;
             border-bottom: 1px solid #eee;
@@ -325,7 +324,6 @@
             border-color: #333;
         }
 
-        /* 帖子列表 */
         .forum-posts {
             padding-top: 0.5rem;
         }
@@ -522,7 +520,7 @@
             <h1>ccggx 2B2T</h1>
             <div class="tagline">无规则 · 无政府 · 存档永不重置</div>
         </div>
-        <div style="font-size:0.8rem;color:#888;">v2.0 · 论坛已开启</div>
+        <div style="font-size:0.8rem;color:#888;">论坛已开启 · 数据永久保存</div>
     </header>
 
     <!-- ========== 模块 2：实时状态 ========== -->
@@ -655,18 +653,14 @@
     // 模块 1：配置
     // ================================================================
 
-    // ⚠️ 重要：替换为你的 GitHub 仓库信息
     const CONFIG = {
-        // GitHub 仓库信息（用于存储帖子）
-        GITHUB_REPO: 'CCGGX-BOT/ccggx_',    // 例如 'ccggx/ccggx-2b2t-forum'
-        GITHUB_TOKEN: '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',          // 需要有 repo 权限的 Personal Access Token
-        // 或者使用 GitHub Issues API（无需 token，但只读）
-        // 如果要支持发帖，必须提供 token
+        // GitHub 仓库信息
+        GITHUB_REPO: 'CCGGX-BOT/ccggx_',
+        // 发帖需要 Token，读取帖子不需要（公开仓库）
+        // 注意：如果 Token 不正确，帖子会保存到本地浏览器
+        GITHUB_TOKEN: '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', // 留空则发帖保存到本地，填 Token 则保存到 GitHub
 
-        // 服务器信息
         SERVER_ADDRESS: 'ccggx.fucku.top',
-
-        // 论坛限制
         POST_INTERVAL_MS: 10 * 60 * 1000, // 10 分钟
     };
 
@@ -768,53 +762,58 @@
     // ================================================================
 
     const FORUM = {
-        // 存储所有帖子
         posts: [],
-        // 是否正在加载
         loading: false,
 
-        // 获取帖子列表（从 GitHub Issues）
+        // 获取帖子列表
         async fetchPosts() {
             const repo = CONFIG.GITHUB_REPO;
             if (!repo || repo === 'YOUR_USERNAME/YOUR_REPO') {
-                // 如果未配置 GitHub，使用本地模拟数据
                 return this.getMockPosts();
             }
 
             try {
-                const url = `https://api.github.com/repos/${repo}/issues?state=open&per_page=50&sort=created&direction=desc`;
+                const url = `https://api.github.com/repos/${repo}/issues?state=all&per_page=50&sort=created&direction=desc`;
+                console.log('📡 正在请求:', url);
+
                 const response = await fetch(url, {
-                    headers: CONFIG.GITHUB_TOKEN ? {
-                        'Authorization': `token ${CONFIG.GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    } : {
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }
                 });
 
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const issues = await response.json();
+                console.log('📡 HTTP 状态:', response.status);
 
-                // 解析 Issue 为帖子格式
+                if (response.status === 404) {
+                    console.warn('⚠️ 仓库或 Issues 不可用，使用本地数据');
+                    return this.getMockPosts();
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const issues = await response.json();
+                console.log('📡 获取到 Issues 数量:', issues.length);
+
+                if (!Array.isArray(issues) || issues.length === 0) {
+                    console.log('📭 暂无帖子');
+                    return [];
+                }
+
                 return issues.map(issue => {
-                    // 从 label 中提取作者名（格式：author:xxx）
                     let author = '匿名';
                     const authorLabel = issue.labels?.find(l => l.name && l.name.startsWith('author:'));
                     if (authorLabel) {
                         author = authorLabel.name.replace('author:', '');
                     }
 
-                    // 从 body 中提取内容（使用 <!-- content --> 标记）
                     let content = issue.body || '';
                     const contentMatch = content.match(/<!-- content -->\s*([\s\S]*?)\s*<!-- \/content -->/);
                     if (contentMatch) {
                         content = contentMatch[1].trim();
                     } else {
-                        // 如果没有标记，直接使用 body
                         content = content.trim();
                     }
 
-                    // 提取回复（使用 <!-- reply --> 标记）
                     const replies = [];
                     const replyRegex = /<!-- reply -->\s*<strong>(.*?)<\/strong>\s*<em>(.*?)<\/em>\s*<blockquote>\s*([\s\S]*?)\s*<\/blockquote>\s*<!-- \/reply -->/g;
                     let match;
@@ -837,49 +836,79 @@
                     };
                 });
             } catch (error) {
-                console.error('获取帖子失败:', error);
+                console.error('❌ 获取帖子失败:', error);
+                const local = this.getLocalPosts();
+                if (local && local.length > 0) {
+                    return local;
+                }
                 return this.getMockPosts();
             }
         },
 
-        // 模拟数据（当 GitHub 未配置时使用）
+        // 模拟数据
         getMockPosts() {
             return [
                 {
                     id: 1,
-                    title: '【示例】欢迎来到 ccggx 2B2T 论坛',
+                    title: '💬 欢迎来到 ccggx 2B2T 论坛',
                     author: 'admin',
-                    time: new Date(Date.now() - 3600000).toISOString(),
-                    content: '这是论坛的示例帖子。配置 GitHub 仓库后，所有帖子将永久保存。',
-                    replies: [
-                        { author: 'player1', time: new Date(Date.now() - 1800000).toISOString(), content: '测试回复' }
-                    ],
-                    replyCount: 1
+                    time: new Date().toISOString(),
+                    content: '这是论坛的示例帖子。配置好 GitHub Issues 后，所有帖子将永久保存。',
+                    replies: [],
+                    replyCount: 0
                 },
                 {
                     id: 2,
-                    title: '服务器真好玩！',
-                    author: 'explorer',
-                    time: new Date(Date.now() - 7200000).toISOString(),
-                    content: '刚在出生点外 3000 格找到了一个天然矿洞，资源丰富！',
+                    title: '🎮 服务器地址：ccggx.fucku.top',
+                    author: 'admin',
+                    time: new Date(Date.now() - 3600000).toISOString(),
+                    content: '主地址：ccggx.fucku.top\n备用地址：vip.cq.frp.one:29581',
                     replies: [],
                     replyCount: 0
                 }
             ];
         },
 
-        // 发布新帖子（创建 GitHub Issue）
+        // 本地存储
+        saveToLocal(title, author, content) {
+            const key = 'forum_posts_local';
+            let posts = JSON.parse(localStorage.getItem(key) || '[]');
+            const newPost = {
+                id: Date.now(),
+                title: title,
+                author: author,
+                time: new Date().toISOString(),
+                content: content,
+                replies: [],
+                replyCount: 0,
+                _local: true
+            };
+            posts.unshift(newPost);
+            localStorage.setItem(key, JSON.stringify(posts));
+            return { success: true, id: newPost.id, local: true };
+        },
+
+        getLocalPosts() {
+            const key = 'forum_posts_local';
+            const data = localStorage.getItem(key);
+            if (data) {
+                try { return JSON.parse(data); } catch (e) { return []; }
+            }
+            return [];
+        },
+
+        // 创建帖子
         async createPost(title, author, content) {
             const repo = CONFIG.GITHUB_REPO;
             const token = CONFIG.GITHUB_TOKEN;
 
-            if (!repo || repo === 'YOUR_USERNAME/YOUR_REPO' || !token || token === 'YOUR_GITHUB_TOKEN') {
-                // 如果未配置，保存到本地 localStorage（仅演示）
+            // 如果没有 Token，保存到本地
+            if (!token || token === '') {
+                console.warn('⚠️ 未配置 GitHub Token，帖子将保存到本地浏览器');
                 return this.saveToLocal(title, author, content);
             }
 
             try {
-                // 构建 Issue body，包含作者和内容标记
                 const body = `**作者：** ${author}\n\n<!-- content -->\n${content}\n<!-- /content -->`;
 
                 const response = await fetch(`https://api.github.com/repos/${repo}/issues`, {
@@ -902,54 +931,14 @@
                 }
 
                 const issue = await response.json();
-                return {
-                    success: true,
-                    id: issue.number,
-                    issue: issue
-                };
+                return { success: true, id: issue.number };
             } catch (error) {
-                console.error('发布帖子失败:', error);
-                // 降级：保存到 localStorage
+                console.error('❌ 发布到 GitHub 失败:', error);
                 return this.saveToLocal(title, author, content);
             }
         },
 
-        // 本地存储（降级方案）
-        saveToLocal(title, author, content) {
-            const key = 'forum_posts_local';
-            let posts = JSON.parse(localStorage.getItem(key) || '[]');
-            const newPost = {
-                id: Date.now(),
-                title: title,
-                author: author,
-                time: new Date().toISOString(),
-                content: content,
-                replies: [],
-                replyCount: 0,
-                _local: true
-            };
-            posts.unshift(newPost);
-            localStorage.setItem(key, JSON.stringify(posts));
-            return {
-                success: true,
-                id: newPost.id,
-                local: true
-            };
-        },
-
-        // 从本地存储加载（降级方案）
-        getLocalPosts() {
-            const key = 'forum_posts_local';
-            const data = localStorage.getItem(key);
-            if (data) {
-                try {
-                    return JSON.parse(data);
-                } catch (e) { return []; }
-            }
-            return [];
-        },
-
-        // 渲染帖子列表
+        // 渲染帖子
         renderPosts(posts) {
             const container = document.getElementById('forumPosts');
             const countEl = document.getElementById('postCount');
@@ -963,6 +952,7 @@
             let html = '';
             posts.forEach(post => {
                 const timeStr = new Date(post.time).toLocaleString('zh-CN');
+                const isLocal = post._local ? ' <span style="color:#f0a030;font-size:0.7rem;">[本地]</span>' : '';
                 html += `
                     <div class="forum-post">
                         <div class="post-header">
@@ -970,22 +960,17 @@
                             <span class="post-meta">
                                 <span class="author">${this.escapeHtml(post.author)}</span>
                                 · ${timeStr}
-                                ${post._local ? ' <span style="color:#f0a030;font-size:0.7rem;">[本地]</span>' : ''}
+                                ${isLocal}
                             </span>
                         </div>
                         <div class="post-body">
-                            ${this.escapeHtml(post.content)}
+                            ${this.escapeHtml(post.content).replace(/\n/g, '<br>')}
                             ${post.replies && post.replies.length > 0 ? post.replies.map(r => `
                                 <div class="reply">
                                     <div class="reply-meta">${this.escapeHtml(r.author)} · ${new Date(r.time).toLocaleString('zh-CN')}</div>
                                     ${this.escapeHtml(r.content)}
                                 </div>
                             `).join('') : ''}
-                            ${post.replyCount > 0 && (!post.replies || post.replies.length === 0) ? `
-                                <div class="reply" style="color:#888;font-size:0.85rem;">
-                                    💬 ${post.replyCount} 条回复（点击 GitHub Issue 查看）
-                                </div>
-                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -1013,7 +998,6 @@
             try {
                 let posts = await this.fetchPosts();
 
-                // 如果没有从 GitHub 获取到数据，尝试本地
                 if (!posts || posts.length === 0) {
                     const local = this.getLocalPosts();
                     if (local && local.length > 0) {
@@ -1024,12 +1008,11 @@
                 this.posts = posts || [];
                 this.renderPosts(this.posts);
             } catch (error) {
-                console.error('加载帖子失败:', error);
+                console.error('❌ 加载失败:', error);
                 const local = this.getLocalPosts();
                 if (local && local.length > 0) {
                     this.posts = local;
                     this.renderPosts(this.posts);
-                    container.innerHTML = '<div class="forum-loading">⚠️ 使用本地数据（GitHub 连接失败）</div>' + container.innerHTML;
                 } else {
                     container.innerHTML = '<div class="forum-empty">⚠️ 加载失败，请刷新重试</div>';
                 }
@@ -1040,22 +1023,19 @@
     };
 
     // ================================================================
-    // 模块 5：发帖逻辑（含 IP 限频）
+    // 模块 5：发帖逻辑
     // ================================================================
 
-    // 获取客户端 IP（通过第三方服务）
     async function getClientIP() {
         try {
             const response = await fetch('https://api.ipify.org?format=json');
             const data = await response.json();
             return data.ip;
         } catch (error) {
-            console.warn('获取 IP 失败，使用本地标识');
             return 'local_' + (localStorage.getItem('local_id') || Math.random().toString(36).substr(2, 6));
         }
     }
 
-    // 检查发帖频率
     function canPost(ip) {
         const key = `forum_last_post_${ip}`;
         const lastPostTime = localStorage.getItem(key);
@@ -1069,13 +1049,11 @@
         return { can: true };
     }
 
-    // 记录发帖时间
     function recordPost(ip) {
         const key = `forum_last_post_${ip}`;
         localStorage.setItem(key, Date.now().toString());
     }
 
-    // 提交帖子
     window.submitPost = async function() {
         const titleEl = document.getElementById('forumTitle');
         const authorEl = document.getElementById('forumAuthor');
@@ -1087,13 +1065,11 @@
         const author = authorEl.value.trim() || '匿名';
         const content = contentEl.value.trim();
 
-        // 验证
         if (!title) { hintEl.textContent = '⚠️ 请填写帖子标题'; hintEl.className = 'hint error'; return; }
         if (!content) { hintEl.textContent = '⚠️ 请填写帖子内容'; hintEl.className = 'hint error'; return; }
         if (content.length > 1000) { hintEl.textContent = '⚠️ 内容不能超过 1000 字'; hintEl.className = 'hint error'; return; }
         if (author.length > 20) { hintEl.textContent = '⚠️ 名字不能超过 20 个字符'; hintEl.className = 'hint error'; return; }
 
-        // 频率限制
         let ip = localStorage.getItem('cached_ip');
         if (!ip) {
             ip = await getClientIP();
@@ -1107,7 +1083,6 @@
             return;
         }
 
-        // 禁用按钮
         btn.disabled = true;
         hintEl.textContent = '⏳ 发布中...';
         hintEl.className = 'hint';
@@ -1119,9 +1094,7 @@
                 hintEl.className = 'hint success';
                 titleEl.value = '';
                 contentEl.value = '';
-                // 记录发帖时间
                 recordPost(ip);
-                // 重新加载帖子
                 await FORUM.load();
             } else {
                 hintEl.textContent = '❌ 发布失败：' + (result.error || '未知错误');
@@ -1133,8 +1106,6 @@
         }
 
         btn.disabled = false;
-
-        // 3 秒后清除提示
         setTimeout(() => {
             hintEl.textContent = '内容将永久保存在 GitHub Issues 中';
             hintEl.className = 'hint';
@@ -1142,20 +1113,16 @@
     };
 
     // ================================================================
-    // 模块 6：初始化论坛
+    // 模块 6：初始化
     // ================================================================
 
-    // 加载帖子
     window.loadPosts = function() {
         FORUM.load();
     };
 
-    // 页面加载完成后初始化
     document.addEventListener('DOMContentLoaded', function() {
-        // 加载帖子
         FORUM.load();
 
-        // 检查是否有缓存 IP
         const cachedIP = localStorage.getItem('cached_ip');
         if (!cachedIP) {
             getClientIP().then(ip => {
@@ -1163,19 +1130,11 @@
             });
         }
 
-        // 控制台提示
         console.log('=== ccggx 2B2T 论坛 ===');
-        console.log('帖子数据存储：', CONFIG.GITHUB_REPO && CONFIG.GITHUB_REPO !== 'YOUR_USERNAME/YOUR_REPO' ? 'GitHub Issues' : '本地浏览器（演示模式）');
-        console.log('发帖限制：每 IP 10 分钟 1 帖');
-        if (!CONFIG.GITHUB_TOKEN || CONFIG.GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN') {
-            console.warn('⚠️ 未配置 GitHub Token，帖子将保存在本地浏览器中，刷新后可能丢失');
-            console.warn('请设置 CONFIG.GITHUB_TOKEN 以启用永久存储');
-        }
+        console.log('📦 仓库:', CONFIG.GITHUB_REPO);
+        console.log('🔑 Token:', CONFIG.GITHUB_TOKEN ? '已配置' : '未配置（发帖将保存到本地）');
+        console.log('⏱️ 发帖限制: 每 10 分钟 1 帖');
     });
-
-    // ================================================================
-    // 模块 7：备用 - 按 Enter 提交
-    // ================================================================
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {

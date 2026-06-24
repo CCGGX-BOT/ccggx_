@@ -22,6 +22,7 @@
             line-height: 1.7;
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
 
         body {
@@ -81,6 +82,7 @@
             display: flex;
             gap: 1.8rem;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .navbar .nav-links a {
@@ -121,6 +123,24 @@
 
         .navbar .nav-links a.active::after {
             width: 100%;
+        }
+
+        /* ===== 浏览量计数 ===== */
+        .view-counter {
+            font-size: 0.75rem;
+            color: #aaa;
+            background: #f5f5f5;
+            padding: 0.15rem 0.8rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .view-counter .num {
+            font-weight: 700;
+            color: #555;
         }
 
         /* ===== 页面容器 ===== */
@@ -187,7 +207,6 @@
             border-radius: 20px;
         }
 
-        /* ===== 成立年份标记 ===== */
         .founded-badge {
             display: inline-block;
             font-size: 0.7rem;
@@ -480,12 +499,6 @@
             opacity: 1;
         }
 
-        .help-content .help-section .highlight-yellow {
-            background: #fef9e7;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-        }
-
         /* ===== 公告栏 ===== */
         .announcement-container {
             background: #fafafa;
@@ -546,11 +559,23 @@
             color: #aaa;
             font-size: 0.8rem;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .announcement-item .announcement-meta .author {
             color: #777;
             font-weight: 500;
+        }
+
+        .announcement-item .announcement-meta .view-count {
+            color: #bbb;
+            font-size: 0.7rem;
+            background: #f0f0f0;
+            padding: 0.05rem 0.5rem;
+            border-radius: 10px;
         }
 
         .announcement-body {
@@ -623,6 +648,11 @@
             text-align: right;
             padding-top: 0.8rem;
             font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .announcement-footer a {
@@ -637,6 +667,16 @@
         .announcement-footer a:hover {
             color: #1a1a1a;
             border-bottom-color: #1a1a1a;
+        }
+
+        .announcement-footer .total-views {
+            font-size: 0.8rem;
+            color: #bbb;
+        }
+
+        .announcement-footer .total-views .num {
+            color: #555;
+            font-weight: 600;
         }
 
         .admin-hint {
@@ -772,6 +812,160 @@
             z-index: 1;
         }
 
+        /* ===== 欢迎弹窗 ===== */
+        .welcome-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .welcome-overlay.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .welcome-modal {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2rem 2.5rem 2rem 2.5rem;
+            max-width: 520px;
+            width: 92%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .welcome-modal.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .welcome-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-modal .modal-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .welcome-modal .modal-header .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #bbb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0 0.3rem;
+            line-height: 1;
+        }
+
+        .welcome-modal .modal-header .close-btn:hover {
+            color: #1a1a1a;
+            transform: rotate(90deg);
+        }
+
+        .welcome-modal .modal-body {
+            color: #4a4a4a;
+            font-size: 0.95rem;
+        }
+
+        .welcome-modal .modal-body .new-item {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .welcome-modal .modal-body .new-item:last-child {
+            border-bottom: none;
+        }
+
+        .welcome-modal .modal-body .new-item .item-title {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .welcome-modal .modal-body .new-item .item-time {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-left: 0.5rem;
+        }
+
+        .welcome-modal .modal-body .new-item .item-summary {
+            font-size: 0.85rem;
+            color: #777;
+            display: block;
+            margin-top: 0.1rem;
+        }
+
+        .welcome-modal .modal-body .no-new {
+            color: #bbb;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .welcome-modal .modal-footer {
+            margin-top: 1.2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+            text-align: right;
+        }
+
+        .welcome-modal .modal-footer .btn-close-modal {
+            background: #1a1a1a;
+            border: none;
+            color: #fff;
+            padding: 0.5rem 2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .welcome-modal .modal-footer .btn-close-modal:hover {
+            background: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
         /* ===== 页脚 ===== */
         .footer {
             margin-top: auto;
@@ -876,6 +1070,16 @@
             .help-content .help-section {
                 padding: 1rem 1.2rem;
             }
+
+            .welcome-modal {
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            .announcement-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         @media (max-width: 450px) {
@@ -895,6 +1099,14 @@
             .copy-area .ip {
                 font-size: 1rem;
             }
+
+            .welcome-modal {
+                padding: 1.2rem;
+            }
+
+            .welcome-modal .modal-header h2 {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -911,6 +1123,7 @@
                 <a onclick="switchPage('help')" id="nav-help">帮助</a>
                 <a onclick="switchPage('announcements')" id="nav-announcements">公告</a>
                 <a href="https://github.com/CCGGX-BOT/ccggx_" target="_blank">GitHub</a>
+                <span class="view-counter" id="totalViewCounter">👁️ <span class="num" id="totalViewNum">--</span></span>
             </div>
         </nav>
 
@@ -1022,7 +1235,6 @@
                 <div class="section-title">帮助</div>
                 <div class="help-content">
 
-                    <!-- ===== 注册/登录 ===== -->
                     <div class="help-section">
                         <div class="help-title"><span class="icon">🔐</span> 注册 / 登录</div>
                         <ul>
@@ -1032,7 +1244,6 @@
                         </ul>
                     </div>
 
-                    <!-- ===== 命令 ===== -->
                     <div class="help-section">
                         <div class="help-title"><span class="icon">⚡</span> 命令</div>
                         <ul>
@@ -1042,7 +1253,6 @@
                         </ul>
                     </div>
 
-                    <!-- ===== 其他 ===== -->
                     <div class="help-section">
                         <div class="help-title"><span class="icon">💡</span> 其他</div>
                         <ul>
@@ -1075,9 +1285,12 @@
                     </div>
 
                     <div class="announcement-footer">
-                        <a onclick="loadAnnouncements()">🔄 刷新公告</a>
-                        &nbsp;·&nbsp;
-                        <span style="color:#aaa;font-size:0.85rem;" id="announcementCount"></span>
+                        <div>
+                            <a onclick="loadAnnouncements()">🔄 刷新公告</a>
+                            &nbsp;·&nbsp;
+                            <span style="color:#aaa;font-size:0.85rem;" id="announcementCount"></span>
+                        </div>
+                        <span class="total-views" id="totalAnnouncementViews">📊 总浏览量：<span class="num" id="totalViewNumFooter">--</span></span>
                     </div>
 
                     <div class="admin-hint">
@@ -1105,6 +1318,24 @@
 
     </div>
 
+    <!-- ============================================================ -->
+    <!-- 欢迎弹窗 -->
+    <!-- ============================================================ -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-modal" id="welcomeModal">
+            <div class="modal-header">
+                <h2>🎉 欢迎！</h2>
+                <button class="close-btn" onclick="closeWelcome()">✕</button>
+            </div>
+            <div class="modal-body" id="welcomeBody">
+                <div class="no-new">⏳ 加载中...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closeWelcome()">知道了</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================================================================ -->
     <!-- JavaScript -->
     <!-- ================================================================ -->
@@ -1116,6 +1347,208 @@
         const CONFIG = {
             GITHUB_REPO: 'CCGGX-BOT/ccggx_',
             SERVER_ADDRESS: 'ccggx.fucku.top',
+            // 用于存储全站浏览量的 Issue 编号（需要提前创建一个）
+            // 如果为 null，则自动使用第一个 Issue
+            VIEW_ISSUE_NUMBER: null,
+        };
+
+        // ================================================================
+        // 数据存储 & 浏览量
+        // ================================================================
+
+        const VIEW_STORE = {
+            // 全站浏览量
+            totalViews: 0,
+            // 每条公告的浏览量 { issueId: count }
+            postViews: {},
+            // 是否已初始化
+            initialized: false,
+
+            // 从 GitHub 加载浏览量数据
+            async loadViews() {
+                try {
+                    const repo = CONFIG.GITHUB_REPO;
+                    // 使用一个专门的 Issue 存储浏览量数据
+                    // 如果指定了 VIEW_ISSUE_NUMBER 则使用，否则尝试获取第一个 Issue
+                    let issueNumber = CONFIG.VIEW_ISSUE_NUMBER;
+
+                    if (!issueNumber) {
+                        // 尝试获取第一个 Issue
+                        const listRes = await fetch(
+                            `https://api.github.com/repos/${repo}/issues?state=all&per_page=1&sort=created&direction=asc`
+                        );
+                        const issues = await listRes.json();
+                        if (issues && issues.length > 0) {
+                            issueNumber = issues[0].number;
+                        } else {
+                            // 没有 Issue，无法存储浏览量
+                            console.warn('没有找到可用的 Issue 存储浏览量数据');
+                            this.totalViews = 0;
+                            this.postViews = {};
+                            this.initialized = true;
+                            return;
+                        }
+                    }
+
+                    // 获取这个 Issue 的 body
+                    const res = await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}`);
+                    const issue = await res.json();
+
+                    if (issue.body) {
+                        // 解析 body 中的浏览量数据
+                        const dataMatch = issue.body.match(/<!-- VIEW_DATA -->\s*([\s\S]*?)\s*<!-- \/VIEW_DATA -->/);
+                        if (dataMatch) {
+                            try {
+                                const data = JSON.parse(dataMatch[1]);
+                                this.totalViews = data.totalViews || 0;
+                                this.postViews = data.postViews || {};
+                            } catch (e) {
+                                console.warn('解析浏览量数据失败，使用默认值');
+                                this.totalViews = 0;
+                                this.postViews = {};
+                            }
+                        } else {
+                            this.totalViews = 0;
+                            this.postViews = {};
+                        }
+                    }
+
+                    this.initialized = true;
+                    console.log('📊 浏览量加载完成，总浏览量:', this.totalViews);
+                    this.updateDisplay();
+
+                } catch (error) {
+                    console.error('加载浏览量失败:', error);
+                    this.totalViews = 0;
+                    this.postViews = {};
+                    this.initialized = true;
+                }
+            },
+
+            // 增加全站浏览量（每次页面访问 +1）
+            async incrementTotalView() {
+                // 防止重复计数（同一会话只加一次）
+                const sessionKey = 'ccggx_view_counted';
+                if (sessionStorage.getItem(sessionKey)) {
+                    return;
+                }
+                sessionStorage.setItem(sessionKey, 'true');
+
+                this.totalViews += 1;
+                this.updateDisplay();
+                await this.saveViews();
+            },
+
+            // 增加单条公告浏览量
+            async incrementPostView(postId) {
+                if (!postId) return;
+                if (!this.postViews[postId]) {
+                    this.postViews[postId] = 0;
+                }
+                this.postViews[postId] += 1;
+                this.updateDisplay();
+                await this.saveViews();
+                // 更新公告列表中的显示
+                this.updatePostViewDisplay(postId);
+            },
+
+            // 保存浏览量到 GitHub
+            async saveViews() {
+                try {
+                    const repo = CONFIG.GITHUB_REPO;
+                    let issueNumber = CONFIG.VIEW_ISSUE_NUMBER;
+
+                    if (!issueNumber) {
+                        const listRes = await fetch(
+                            `https://api.github.com/repos/${repo}/issues?state=all&per_page=1&sort=created&direction=asc`
+                        );
+                        const issues = await listRes.json();
+                        if (issues && issues.length > 0) {
+                            issueNumber = issues[0].number;
+                        } else {
+                            console.warn('没有找到可用的 Issue 存储浏览量');
+                            return;
+                        }
+                    }
+
+                    const data = {
+                        totalViews: this.totalViews,
+                        postViews: this.postViews,
+                        lastUpdated: new Date().toISOString()
+                    };
+
+                    // 获取当前 Issue body
+                    const res = await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}`);
+                    const issue = await res.json();
+                    let currentBody = issue.body || '';
+
+                    // 替换或插入 VIEW_DATA
+                    const marker = '<!-- VIEW_DATA -->';
+                    const endMarker = '<!-- /VIEW_DATA -->';
+                    const newData = `${marker}\n${JSON.stringify(data, null, 2)}\n${endMarker}`;
+
+                    if (currentBody.includes(marker)) {
+                        currentBody = currentBody.replace(/<!-- VIEW_DATA -->[\s\S]*?<!-- \/VIEW_DATA -->/, newData);
+                    } else {
+                        currentBody = currentBody + '\n\n' + newData;
+                    }
+
+                    // 更新 Issue（需要 Token）
+                    // 注意：这里需要 Token，但因为是前端，我们只读取，不写入
+                    // 写入需要 Token，但公开仓库的 Issue 更新需要认证
+                    // 因此我们使用 localStorage 作为降级方案
+                    console.warn('⚠️ 保存浏览量到 GitHub 需要 Token，目前保存到本地 localStorage');
+                    localStorage.setItem('ccggx_view_data', JSON.stringify(data));
+                    this.updateDisplay();
+
+                } catch (error) {
+                    console.error('保存浏览量失败:', error);
+                    // 降级到 localStorage
+                    const data = {
+                        totalViews: this.totalViews,
+                        postViews: this.postViews,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    localStorage.setItem('ccggx_view_data', JSON.stringify(data));
+                }
+            },
+
+            // 从 localStorage 加载（降级方案）
+            loadFromLocal() {
+                try {
+                    const data = localStorage.getItem('ccggx_view_data');
+                    if (data) {
+                        const parsed = JSON.parse(data);
+                        this.totalViews = parsed.totalViews || 0;
+                        this.postViews = parsed.postViews || {};
+                        this.initialized = true;
+                        this.updateDisplay();
+                        return true;
+                    }
+                } catch (e) {}
+                return false;
+            },
+
+            // 更新 UI 显示
+            updateDisplay() {
+                const totalViewNum = document.getElementById('totalViewNum');
+                const totalViewNumFooter = document.getElementById('totalViewNumFooter');
+                if (totalViewNum) {
+                    totalViewNum.textContent = this.totalViews || 0;
+                }
+                if (totalViewNumFooter) {
+                    totalViewNumFooter.textContent = this.totalViews || 0;
+                }
+            },
+
+            // 更新单条公告的浏览量显示
+            updatePostViewDisplay(postId) {
+                const el = document.querySelector(`[data-post-id="${postId}"] .view-count`);
+                if (el) {
+                    const count = this.postViews[postId] || 0;
+                    el.textContent = `👁️ ${count}`;
+                }
+            }
         };
 
         // ================================================================
@@ -1276,13 +1709,21 @@
                         if (contentMatch) content = contentMatch[1].trim();
                         else content = content.trim();
 
+                        // 提取浏览量（从 body 中）
+                        let viewCount = 0;
+                        const viewMatch = content.match(/<!-- views:(\d+) -->/);
+                        if (viewMatch) {
+                            viewCount = parseInt(viewMatch[1]) || 0;
+                        }
+
                         return {
                             id: issue.number,
                             title: issue.title,
                             author: author,
                             time: issue.created_at,
                             content: content,
-                            url: issue.html_url
+                            url: issue.html_url,
+                            views: viewCount
                         };
                     });
                 } catch (error) {
@@ -1301,7 +1742,8 @@
                     author: '管理员',
                     time: new Date().toISOString(),
                     content: longContent,
-                    url: '#'
+                    url: '#',
+                    views: 0
                 }];
             },
 
@@ -1333,14 +1775,16 @@
                     const isLong = this.isTruncated(item.content);
                     const summary = isLong ? this.truncate(item.content, this.SUMMARY_LENGTH) : item.content;
                     const itemId = `ann-${item.id || index}`;
+                    const views = VIEW_STORE.postViews[item.id] || item.views || 0;
 
                     html += `
-                            <div class="announcement-item" id="${itemId}" onclick="toggleAnnouncement('${itemId}')">
+                            <div class="announcement-item" id="${itemId}" data-post-id="${item.id}" onclick="toggleAnnouncement('${itemId}', ${item.id})">
                                 <div class="announcement-header">
                                     <span class="announcement-title">${this.escapeHtml(item.title)}</span>
                                     <span class="announcement-meta">
                                         <span class="author">${this.escapeHtml(item.author)}</span>
                                         · ${timeStr}
+                                        <span class="view-count">👁️ ${views}</span>
                                         ${item.url && item.url !== '#' ? `· <a href="${item.url}" target="_blank" style="color:#aaa;text-decoration:none;border-bottom:1px solid #e0e0e0;pointer-events:auto;" onclick="event.stopPropagation();">查看原文</a>` : ''}
                                     </span>
                                 </div>
@@ -1382,14 +1826,24 @@
                     container.innerHTML = '<div class="announcement-empty">⚠️ 加载失败，请刷新重试</div>';
                 }
                 this.loading = false;
+            },
+
+            // 获取3天内的新公告
+            getRecentPosts(days = 3) {
+                const now = new Date();
+                const cutoff = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+                return this.items.filter(item => {
+                    const postDate = new Date(item.time);
+                    return postDate >= cutoff;
+                });
             }
         };
 
         // ================================================================
-        // 展开/收起公告
+        // 展开/收起公告（带浏览量计数）
         // ================================================================
 
-        window.toggleAnnouncement = function(itemId) {
+        window.toggleAnnouncement = function(itemId, postId) {
             const item = document.getElementById(itemId);
             if (!item) return;
 
@@ -1411,6 +1865,11 @@
                 full.classList.add('show');
                 hint.textContent = '收起 ▲';
                 item.classList.add('expanded');
+
+                // 展开时增加浏览量
+                if (postId) {
+                    VIEW_STORE.incrementPostView(postId);
+                }
             }
         };
 
@@ -1419,15 +1878,87 @@
         };
 
         // ================================================================
+        // 欢迎弹窗
+        // ================================================================
+
+        function showWelcome() {
+            const overlay = document.getElementById('welcomeOverlay');
+            const body = document.getElementById('welcomeBody');
+
+            // 检查是否已经显示过
+            if (sessionStorage.getItem('ccggx_welcome_shown')) {
+                return;
+            }
+
+            overlay.classList.add('show');
+
+            // 加载3天内的新公告
+            const recent = ANNOUNCEMENT.getRecentPosts(3);
+
+            if (recent.length > 0) {
+                let html = `<p style="margin-bottom:0.8rem;color:#666;">📋 最近 <strong>3 天</strong> 内有 ${recent.length} 条新公告：</p>`;
+                recent.forEach(item => {
+                    const timeStr = new Date(item.time).toLocaleString('zh-CN');
+                    const summary = item.content.length > 60 ? item.content.slice(0, 60) + '...' : item.content;
+                    html += `
+                            <div class="new-item">
+                                <span class="item-title">${ANNOUNCEMENT.escapeHtml(item.title)}</span>
+                                <span class="item-time">${timeStr}</span>
+                                <span class="item-summary">${ANNOUNCEMENT.escapeHtml(summary)}</span>
+                            </div>
+                        `;
+                });
+                body.innerHTML = html;
+            } else {
+                body.innerHTML = `
+                        <div class="no-new">
+                            <p style="font-size:1.5rem;margin-bottom:0.3rem;">📭</p>
+                            <p>最近 3 天没有新公告</p>
+                            <p style="font-size:0.85rem;color:#ccc;margin-top:0.3rem;">欢迎回来，看看公告栏有没有更新吧！</p>
+                        </div>
+                    `;
+            }
+
+            // 标记已显示
+            sessionStorage.setItem('ccggx_welcome_shown', 'true');
+        }
+
+        function closeWelcome() {
+            const overlay = document.getElementById('welcomeOverlay');
+            overlay.classList.remove('show');
+        }
+
+        // 点击遮罩关闭
+        document.getElementById('welcomeOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWelcome();
+            }
+        });
+
+        // ================================================================
         // 初始化
         // ================================================================
 
-        document.addEventListener('DOMContentLoaded', function() {
-            ANNOUNCEMENT.load();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 1. 加载公告
+            await ANNOUNCEMENT.load();
+
+            // 2. 加载浏览量
+            const loaded = VIEW_STORE.loadFromLocal();
+            if (!loaded) {
+                await VIEW_STORE.loadViews();
+            }
+
+            // 3. 增加全站浏览量
+            await VIEW_STORE.incrementTotalView();
+
+            // 4. 显示欢迎弹窗
+            setTimeout(showWelcome, 600);
+
             console.log('=== ccggx 2B2T 官网 ===');
             console.log('📦 仓库:', CONFIG.GITHUB_REPO);
-            console.log('📢 公告摘要长度:', ANNOUNCEMENT.SUMMARY_LENGTH, '字符');
-            console.log('💡 点击公告可展开/收起全文');
+            console.log('📊 总浏览量:', VIEW_STORE.totalViews);
+            console.log('💡 点击公告可展开/收起全文，并增加浏览量');
         });
     </script>
 
